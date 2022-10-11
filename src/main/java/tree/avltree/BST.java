@@ -36,9 +36,29 @@ public class BST <E> implements Tree<E> {
     return false;
     }
 
+
     @Override
     public boolean leggInn(E e) {
-        return false;
+    if(root==null){
+        root= new TreeNode(e);
+    }
+    else {
+        TreeNode<E> parent=null;
+        TreeNode<E> current=root;
+        while(current!=null){
+            if(c.compare(e, current.element)<0){
+                parent=current;
+                current=current.left;
+            }
+            else if(c.compare(e, current.element)>0){
+                parent=current;
+                current=current.right;
+            }
+            else return false;
+
+        }
+
+    }
     }
 
     @Override
