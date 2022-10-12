@@ -55,9 +55,9 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
                     current = current.right;
                 } else return false;
                 if (c.compare(e, parent.element) < 0)
-                    parent.left = new TreeNode<>(e);
+                    parent.left = createNewNode(e);
                 else
-                    parent.right = new TreeNode<>(e);
+                    parent.right = createNewNode(e);
             }
 
         }
