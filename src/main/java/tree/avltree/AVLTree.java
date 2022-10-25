@@ -1,78 +1,107 @@
 package tree.avltree;
 
 public class AVLTree<E extends Comparable<E>> extends BST<E> {
+
     public AVLTree() {}
 
     public AVLTree(E[] objects) {
          super(objects);
     }
-    @Override /** Override createNewNode to create an AVLTreeNode */
- protected AVLTreeNode<E> createNewNode(E e) {
-         return new AVLTreeNode<E>(e);
-         }
+  //  @Override /** Override createNewNode to create an AVLTreeNode */
+  //   protected TreeNode<E> createNewNode(E e) {
+ //        return new TreeNode<E>(e);
+    //     }
+
 
          @Override /** Insert an element and rebalance if necessary */
  public boolean leggInn(E e) {
+
          boolean successful = super.leggInn(e);
-         if (!successful)
+         if (!successful) {
+             System.out.println("DUPLIKAT"); // TODO: Duplikat oppdages bare i root. Root oppdateres ikke
+             // TODO: referanse til root må oppdaters
              return false; // e is already in the tree
+         }
          else {
-             balancePath(e); // Balance from e to the root if necessary
+             balancePath(e); // Balance from e to the root if necessary // FEILER
+    //      System.out.println("Prøver å balansere treet");
              }
+  //           System.out.println("ny node instans satt inn?"); DENNE KJØRER
 
          return true; // e is inserted
+
          }
 
          /** Update the height of a specified node */
-         private void updateHeight(AVLTreeNode<E> node) {
-         if (node.left == null && node.right == null) // node is a leaf
-             node.height = 0;
-         else if (node.left == null) // node has no left subtree
-             node.height = 1 + ((AVLTreeNode<E>)(node.right)).height;
-         else if (node.right == null) // node has no right subtree
-             node.height = 1 + ((AVLTreeNode<E>)(node.left)).height;
-         else
-         node.height = 1 +
-                 Math.max(((AVLTreeNode<E>)(node.right)).height,
-                 ((AVLTreeNode<E>)(node.left)).height);
+         private void updateHeight(TreeNode<E> node) {
+             if (node.left == null && node.right == null) {// node is a leaf
+                 node.height = 0;
+    //             System.out.println("node is a leaf");
+             }
+             else if (node.left == null) {// node has no left subtree
+                 node.height = 1 + node.right.height;
+  //               System.out.println("node has no left subtree");
+             }
+             else if (node.right == null) {// node has no right subtree
+                 node.height = 1 - node.left.height;
+     //            System.out.println("node has no right subtree");
+             }
+             else {
+                 node.height = 1 +
+                         Math.max(node.right.height, node.left.height);
+                 System.out.println(
+                         "Current høyde " + node.height +"\n"+
+                                 "RIGHT høyde " + node.right.height +"\n"+
+                                 "LEFT høyde " + node.left.height   +"\n"
+
+                         );
+             }
          }
 
     private void balancePath(E e) {
          java.util.ArrayList<TreeNode<E>> path = path(e);
          for (int i = path.size() - 1; i >= 0; i--) {
-             AVLTreeNode<E> A = (AVLTreeNode<E>)(path.get(i));
+             TreeNode<E> A = (TreeNode<E>)(path.get(i));   // FEILER
              updateHeight(A);
-             AVLTreeNode<E> parentOfA = (A == root) ? null :
-                     (AVLTreeNode<E>)(path.get(i - 1));
-
+             TreeNode<E> parentOfA = (A == root) ? null :
+                     (TreeNode<E>)(path.get(i - 1));
              switch (balanceFactor(A)) {
                  case -2:
-                     if (balanceFactor((AVLTreeNode<E>)A.left) <= 0) {
+                     if (balanceFactor(A.left) <= 0) {
                          balanceLL(A, parentOfA); // Perform LL rotation
                          }
                      else {
                      balanceLR(A, parentOfA); // Perform LR rotation
                      }
+                     System.out.println("CASE -2");
                  break;
                  case +2:
-                      if (balanceFactor((AVLTreeNode<E>)A.right) >= 0) {
+                      if (balanceFactor(A.right) >= 0) {
                       balanceRR(A, parentOfA); // Perform RR rotation
                       }
                      else {
                       balanceRL(A, parentOfA); // Perform RL rotation
                       }
+                     System.out.println("CASE +2");
                   }
              }
          }
-    private int balanceFactor(AVLTreeNode<E> node) {
-         if (node.right == null) // node has no right subtree
+    private int balanceFactor(TreeNode<E> node) {
+   //          System.out.println("balanceFactor kjører");
+         if (node.right == null) {// node has no right subtree
+             System.out.println("node has no RIGHT subtree " + -node.height);
              return -node.height;
-         else if (node.left == null) // node has no left subtree
-             return +node.height;
-         else
-         return ((AVLTreeNode<E>)node.right).height -
-         ((AVLTreeNode<E>)node.left).height;
          }
+         else if (node.left == null) {// node has no left subtree
+             System.out.println("node has no LEFT subtree " + node.height);
+             return +node.height;
+         }
+         else {
+             System.out.println("HØYRE minu VENSTRE " + node.right.height + " " + node.left.height);
+             return node.right.height - node.left.height;
+         }
+     }
+
 
          /** Balance LL (see Figure 26.3) */
          private void balanceLL(TreeNode<E> A, TreeNode<E> parentOfA) {
@@ -92,8 +121,13 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
 
          A.left = B.right; // Make T2 the left subtree of A
          B.right = A; // Make A the left child of B
-         updateHeight((AVLTreeNode<E>)A);
-         updateHeight((AVLTreeNode<E>)B);
+             System.out.println("HØYDE A gammel: " + A.height);
+             System.out.println("HØYDE B gammel: " + B.height);
+
+         updateHeight(A);
+         System.out.println("HØYDE A ny: " + A.height);
+         updateHeight(B);
+             System.out.println("HØYDE B ny: " + A.height);
          }
     private void balanceLR(TreeNode<E> A, TreeNode<E> parentOfA) {
          TreeNode<E> B = A.left; // A is left−heavy
@@ -115,9 +149,9 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
          C.right = A;
 
          // Adjust heights
-         updateHeight((AVLTreeNode<E>)A);
-         updateHeight((AVLTreeNode<E>)B);
-         updateHeight((AVLTreeNode<E>)C);
+         updateHeight((TreeNode<E>)A);
+         updateHeight((TreeNode<E>)B);
+         updateHeight((TreeNode<E>)C);
          }
     private void balanceRR(TreeNode<E> A, TreeNode<E> parentOfA) {
          TreeNode<E> B = A.right; // A is right-heavy and B is right-heavy
@@ -135,8 +169,8 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
             }
          A.right = B.left; // Make T2 the right subtree of A
          B.left = A;
-         updateHeight((AVLTreeNode<E>)A);
-         updateHeight((AVLTreeNode<E>)B);
+         updateHeight((TreeNode<E>)A);
+         updateHeight((TreeNode<E>)B);
          }
 
          /** Balance RL (see Figure 26.6) */
@@ -159,14 +193,15 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
          B.left = C.right; // Make T3 the left subtree of B
          C.left = A;
          C.right = B;
-             updateHeight((AVLTreeNode<E>)A);
-              updateHeight((AVLTreeNode<E>)B);
-              updateHeight((AVLTreeNode<E>)C);
+             updateHeight((TreeNode<E>)A);
+              updateHeight((TreeNode<E>)B);
+              updateHeight((TreeNode<E>)C);
               }
     @Override /** Delete an element from the AVL tree.
      185 * Return true if the element is deleted successfully
      186 * Return false if the element is not in the tree */
  public boolean slett(E element) {
+     System.out.println("DET ER SLETT OVERRIDE SOM KJØRER");
          if (root == null)
              return false; // Element is not in the tree
 
@@ -174,11 +209,13 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
          TreeNode<E> parent = null;
          TreeNode<E> current = root;
          while (current != null) {
-             if (element.compareTo(current.element) < 0) {
+         //    if (element.compareTo(current.element) < 0) {
+             if (c.compare(element, current.element) < 0) {
                  parent = current;
                  current = current.left;
                  }
-             else if (element.compareTo(current.element) > 0) {
+             else if (c.compare(element, current.element) > 0) {
+            //     else if (element.compareTo(current.element) > 0) {
                  parent = current;
                  current = current.right;
                  }
@@ -235,13 +272,15 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
  return true; // Element inserted
  }
 
-         /** AVLTreeNode is TreeNode plus height */
-         protected static class AVLTreeNode<E> extends BST.TreeNode<E> {
- protected int height = 0; // New data field
+  //       /** AVLTreeNode is TreeNode plus height */
+//         protected static class AVLTreeNode<E> extends BST.TreeNode<E> {
+ //protected int height = 0; // New data field
 
-         public AVLTreeNode(E e) {
-         super(e);
-         }
- }
+ //        public AVLTreeNode(E e) {
+ //        super(e);
+
+ //        }
+ //}
+
  }
 

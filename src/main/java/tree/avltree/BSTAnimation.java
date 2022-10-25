@@ -13,7 +13,10 @@ import javafx.stage.Stage;
 public class BSTAnimation extends Application {
     @Override // Override the start method in the Application class
 public void start(Stage primaryStage) {
-         BST<Integer> tree = new BST<>(); // Create a tree
+       //  BST<Integer> tree = new BST<>(); // Create a tree
+
+        // Ny ref til AVLTree
+        AVLTree<Integer> tree = new AVLTree<>();
 
         BorderPane pane = new BorderPane();
         BTView view = new BTView(tree); // Create a View
@@ -36,7 +39,7 @@ public void start(Stage primaryStage) {
                  view.setStatus(key + " is already in the tree");
                  }
              else {
-                 tree.leggInn(key); // Insert a new key
+                 tree.leggInn(key); // Insert a new key  // FEILER
                  view.displayTree();
                  view.setStatus(key + " is inserted in the tree");
                  }
@@ -59,6 +62,56 @@ public void start(Stage primaryStage) {
          primaryStage.setTitle("BSTAnimation"); // Set the stage title
          primaryStage.setScene(scene); // Place the scene in the stage
          primaryStage.show(); // Display the stage
+
+        testAVLTree();
+         }
+
+         public void testAVLTree() {
+            AVLTree<Integer> tree2 = new AVLTree<Integer>(new Integer[] {25, 20, 5});
+            System.out.println("After inseting 25, 20, 5:");
+            printTree(tree2);
+
+            tree2.leggInn(34);
+            tree2.leggInn(50);
+            System.out.println("\nAfter inserting 34, 50:");
+            printTree(tree2);
+
+             tree2.leggInn(30);
+             System.out.println("\nAfter inserting 30:");
+             printTree(tree2);
+
+             tree2.leggInn(10);
+             System.out.println("\nAfter inserting 10:");
+             printTree(tree2);
+
+             tree2.slett(30);
+             tree2.slett(34);
+             tree2.slett(50);
+             System.out.println("\nAfter removing 34, 30, 50:");
+             printTree(tree2);
+
+             tree2.slett(5);
+             System.out.println("\nAfter removing 5:");
+
+             System.out.println("\nTraverse the elements in the tree: ");
+             for (int e: tree2) {
+                 System.out.println(e + " ");
+             }
+         }
+
+         public static void printTree(BST tree2) {
+            System.out.println("\nInorder (sorted): ");
+            tree2.inorder();
+
+             System.out.println("\nInPostorder: ");
+             tree2.postOrder();
+
+             System.out.println("\nInPreorder: ");
+             tree2.preOrder();
+
+             System.out.println("\nThe number of nodes is " + tree2.getSize());
+             System.out.println();
+
          }
 
     }

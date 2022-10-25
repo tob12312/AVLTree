@@ -1,8 +1,5 @@
 package tree.avltree;
 
-import java.util.Comparator;
-import java.util.Iterator;
-
 public class BST <E extends Comparable<E>> implements Tree<E> {
 
     protected TreeNode<E> root;
@@ -30,7 +27,7 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
 
         while (current != null) {
             if (c.compare(e, current.element) < 0) {
-                current = current.right;
+                current = current.left;
             } else if (c.compare(e, current.element) > 0) {
                 current = current.right;
             } else return true;
@@ -42,25 +39,31 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
     @Override
     public boolean leggInn(E e) {
         if (root == null) {
-            root = new TreeNode(e);
+            System.out.println("ROOT ER NULL");
+            root = new TreeNode<>(e); // Det er kun første som newes her
         } else {
             TreeNode<E> parent = null;
-            TreeNode<E> current = root;
+            TreeNode<E> current = root;  // current overtar root
             while (current != null) {
                 if (c.compare(e, current.element) < 0) {
                     parent = current;
                     current = current.left;
+                    //            System.out.println("current = current LEFT");
                 } else if (c.compare(e, current.element) > 0) {
                     parent = current;
                     current = current.right;
+                    //              System.out.println("current = current RIGHT");
                 } else return false;
-                if (c.compare(e, parent.element) < 0)
+            } // TODO: Lukket while-løkka her
+                if (c.compare(e, parent.element) < 0) {
                     parent.left = createNewNode(e);
-                else
+                    //             System.out.println("Parent LEFT new");
+                } else {
                     parent.right = createNewNode(e);
+                    //             System.out.println("Parent RIGHT new");
+                }
             }
 
-        }
         size++;
         return true;
     }
@@ -105,6 +108,7 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
 
 
     public static class TreeNode<E> {
+        public int height = 0;
         protected E element;
         protected TreeNode<E> left;
         protected TreeNode<E> right;
@@ -114,6 +118,8 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
         }
     }
 
+
+
     @Override
     public int getSize() {
         return size;
@@ -121,6 +127,7 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
 
     /**
      * Returns the root of the tree
+     * @return
      */
     public TreeNode<E> getRoot() {
         return root;
@@ -195,7 +202,7 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
 // Replace the element in current by the element in rightMost
             current.element = rightMost.element;
 
-             // Eliminate rightmost node
+            // Eliminate rightmost node
             if (parentOfRightMost.right == rightMost)
                 parentOfRightMost.right = rightMost.left;
             else
@@ -264,7 +271,7 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
         size = 0;
     }
     protected TreeNode<E> createNewNode(E e){
-        return new TreeNode<>(e);
+        return new TreeNode<E>(e);
     }
 }
 
