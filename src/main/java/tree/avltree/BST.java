@@ -1,10 +1,11 @@
 package tree.avltree;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 
 public class BST <E extends Comparable<E>> implements Tree<E> {
-
+    public java.util.ArrayList<TreeNode<E>> list;
     protected TreeNode<E> root;
     protected int size = 0;
     protected java.util.Comparator<E> c;
@@ -29,9 +30,9 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
         TreeNode<E> current = root;
 
         while (current != null) {
-            if (c.compare(e, current.element) < 0) {
-                current = current.right;
-            } else if (c.compare(e, current.element) > 0) {
+            if (e.compareTo( current.element) < 0) {
+                current = current.left;
+            } else if (e.compareTo( current.element) > 0) {
                 current = current.right;
             } else return true;
         }
@@ -42,23 +43,31 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
     @Override
     public boolean leggInn(E e) {
         if (root == null) {
-            root = new TreeNode(e);
+            System.out.println("ROOT ER NULL");
+            root = new TreeNode<>(e); // Det er kun første som newes her
         } else {
             TreeNode<E> parent = null;
-            TreeNode<E> current = root;
+            TreeNode<E> current = root;  // current overtar root
             while (current != null) {
                 if (c.compare(e, current.element) < 0) {
                     parent = current;
                     current = current.left;
+                    //            System.out.println("current = current LEFT");
                 } else if (c.compare(e, current.element) > 0) {
                     parent = current;
                     current = current.right;
+                    //              System.out.println("current = current RIGHT");
                 } else return false;
-                if (c.compare(e, parent.element) < 0)
-                    parent.left = createNewNode(e);
-                else
-                    parent.right = createNewNode(e);
+            } // TODO: Lukket while-løkka her
+            if (c.compare(e, parent.element) < 0) {
+                parent.left = createNewNode(e);
+                //             System.out.println("Parent LEFT new");
             }
+            else {
+                parent.right = createNewNode(e);
+                //             System.out.println("Parent RIGHT new");
+            }
+
 
         }
         size++;
@@ -104,8 +113,11 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
 
 
 
+
     public static class TreeNode<E> {
         protected E element;
+        protected int height = 0; // New data field
+
         protected TreeNode<E> left;
         protected TreeNode<E> right;
 
@@ -113,6 +125,7 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
             element = e;
         }
     }
+
 
     @Override
     public int getSize() {
@@ -130,15 +143,15 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
      * Returns a path from the root leading to the specified element
      */
     public java.util.ArrayList<TreeNode<E>> path(E e) {
-        java.util.ArrayList<TreeNode<E>> list =
+        list =
                 new java.util.ArrayList<>();
         TreeNode<E> current = root; // Start from the root
 
         while (current != null) {
             list.add(current); // Add the node to the list
-            if (e.compareTo(current.element) < 0) {
+            if (c.compare(e, current.element) < 0) {
                 current = current.left;
-            } else if (e.compareTo(current.element) > 0) {
+            } else if (c.compare(e,current.element) > 0) {
                 current = current.right;
             } else
                 break;
@@ -152,6 +165,7 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
      Return true if the element is deleted successfully
      Return false if the element is not in the tree */
     public boolean slett(E e) {
+        System.out.println(list.toString());
         TreeNode<E> parent = null;
         TreeNode<E> current = root;
         while (current != null) {

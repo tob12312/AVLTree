@@ -7,8 +7,8 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
          super(objects);
     }
     @Override /** Override createNewNode to create an AVLTreeNode */
- protected AVLTreeNode<E> createNewNode(E e) {
-         return new AVLTreeNode<E>(e);
+ protected TreeNode<E> createNewNode(E e) {
+         return new TreeNode<E>(e);
          }
 
          @Override /** Insert an element and rebalance if necessary */
@@ -24,30 +24,30 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
          }
 
          /** Update the height of a specified node */
-         private void updateHeight(AVLTreeNode<E> node) {
+         private void updateHeight(TreeNode<E> node) {
          if (node.left == null && node.right == null) // node is a leaf
              node.height = 0;
          else if (node.left == null) // node has no left subtree
-             node.height = 1 + ((AVLTreeNode<E>)(node.right)).height;
+             node.height = 1 + ((node.right)).height;
          else if (node.right == null) // node has no right subtree
-             node.height = 1 + ((AVLTreeNode<E>)(node.left)).height;
+             node.height = 1 + ((node.left)).height;
          else
          node.height = 1 +
-                 Math.max(((AVLTreeNode<E>)(node.right)).height,
-                 ((AVLTreeNode<E>)(node.left)).height);
+                 Math.max(((node.right)).height,
+                 ((node.left)).height);
          }
 
     private void balancePath(E e) {
          java.util.ArrayList<TreeNode<E>> path = path(e);
          for (int i = path.size() - 1; i >= 0; i--) {
-             AVLTreeNode<E> A = (AVLTreeNode<E>)(path.get(i));
+             TreeNode<E> A = (path.get(i));
              updateHeight(A);
-             AVLTreeNode<E> parentOfA = (A == root) ? null :
-                     (AVLTreeNode<E>)(path.get(i - 1));
+             TreeNode<E> parentOfA = (A == root) ? null :
+                     (path.get(i - 1));
 
              switch (balanceFactor(A)) {
                  case -2:
-                     if (balanceFactor((AVLTreeNode<E>)A.left) <= 0) {
+                     if (balanceFactor(A.left) <= 0) {
                          balanceLL(A, parentOfA); // Perform LL rotation
                          }
                      else {
@@ -55,7 +55,7 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
                      }
                  break;
                  case +2:
-                      if (balanceFactor((AVLTreeNode<E>)A.right) >= 0) {
+                      if (balanceFactor((TreeNode<E>)A.right) >= 0) {
                       balanceRR(A, parentOfA); // Perform RR rotation
                       }
                      else {
@@ -64,14 +64,14 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
                   }
              }
          }
-    private int balanceFactor(AVLTreeNode<E> node) {
+    private int balanceFactor(TreeNode<E> node) {
          if (node.right == null) // node has no right subtree
              return -node.height;
          else if (node.left == null) // node has no left subtree
              return +node.height;
          else
-         return ((AVLTreeNode<E>)node.right).height -
-         ((AVLTreeNode<E>)node.left).height;
+         return (node.right).height -
+         (node.left).height;
          }
 
          /** Balance LL (see Figure 26.3) */
@@ -92,8 +92,8 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
 
          A.left = B.right; // Make T2 the left subtree of A
          B.right = A; // Make A the left child of B
-         updateHeight((AVLTreeNode<E>)A);
-         updateHeight((AVLTreeNode<E>)B);
+         updateHeight(A);
+         updateHeight(B);
          }
     private void balanceLR(TreeNode<E> A, TreeNode<E> parentOfA) {
          TreeNode<E> B = A.left; // A is left−heavy
@@ -115,9 +115,9 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
          C.right = A;
 
          // Adjust heights
-         updateHeight((AVLTreeNode<E>)A);
-         updateHeight((AVLTreeNode<E>)B);
-         updateHeight((AVLTreeNode<E>)C);
+         updateHeight((TreeNode<E>)A);
+         updateHeight((TreeNode<E>)B);
+         updateHeight((TreeNode<E>)C);
          }
     private void balanceRR(TreeNode<E> A, TreeNode<E> parentOfA) {
          TreeNode<E> B = A.right; // A is right-heavy and B is right-heavy
@@ -135,8 +135,8 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
             }
          A.right = B.left; // Make T2 the right subtree of A
          B.left = A;
-         updateHeight((AVLTreeNode<E>)A);
-         updateHeight((AVLTreeNode<E>)B);
+         updateHeight((TreeNode<E>)A);
+         updateHeight((TreeNode<E>)B);
          }
 
          /** Balance RL (see Figure 26.6) */
@@ -159,9 +159,9 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
          B.left = C.right; // Make T3 the left subtree of B
          C.left = A;
          C.right = B;
-             updateHeight((AVLTreeNode<E>)A);
-              updateHeight((AVLTreeNode<E>)B);
-              updateHeight((AVLTreeNode<E>)C);
+             updateHeight((TreeNode<E>)A);
+              updateHeight((TreeNode<E>)B);
+              updateHeight((TreeNode<E>)C);
               }
     @Override /** Delete an element from the AVL tree.
      185 * Return true if the element is deleted successfully
@@ -236,12 +236,14 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
  }
 
          /** AVLTreeNode is TreeNode plus height */
-         protected static class AVLTreeNode<E> extends BST.TreeNode<E> {
- protected int height = 0; // New data field
+/*
+     protected static class AVLTreeNode<E> extends BST.TreeNode<E> {
+        protected int height = 0; // New data field
 
          public AVLTreeNode(E e) {
          super(e);
          }
  }
+*/
  }
 

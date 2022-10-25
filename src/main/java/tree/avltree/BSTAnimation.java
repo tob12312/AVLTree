@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 public class BSTAnimation extends Application {
     @Override // Override the start method in the Application class
 public void start(Stage primaryStage) {
-         BST<Integer> tree = new BST<>(); // Create a tree
+         AVLTree<String> tree = new AVLTree<>(); // Create a tree
 
         BorderPane pane = new BorderPane();
         BTView view = new BTView(tree); // Create a View
@@ -30,7 +30,7 @@ public void start(Stage primaryStage) {
         pane.setBottom(hBox);
 
         btInsert.setOnAction(e -> {
-             int key = Integer.parseInt(tfKey.getText());
+             String key = (tfKey.getText());
              if (tree.søk(key)) { // key is in the tree already
                  view.displayTree();
                  view.setStatus(key + " is already in the tree");
@@ -42,7 +42,7 @@ public void start(Stage primaryStage) {
                  }
              });
         btDelete.setOnAction(e -> {
-            int key = Integer.parseInt(tfKey.getText());
+            String key = (tfKey.getText());
              if (!tree.søk(key)) { // key is not in the tree
                  view.displayTree();
                  view.setStatus(key + " is not in the tree");

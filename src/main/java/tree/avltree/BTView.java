@@ -5,10 +5,10 @@ import javafx.scene.layout.Pane;
  import javafx.scene.shape.Line;
  import javafx.scene.text.Text;
 public class BTView extends Pane {
-    private BST<Integer> tree = new BST<>();
+    private BST<String> tree = new BST<>();
     private double radius = 15; // Tree node radius
     private double vGap = 50; //
-    BTView(BST<Integer> tree) {
+    BTView(AVLTree<String> tree) {
          this.tree = tree;
          setStatus("Tree is empty");
          }
@@ -27,8 +27,8 @@ public class BTView extends Pane {
          }
 
          /** Display a subtree rooted at position (x, y) */
-         private void displayTree(BST.TreeNode<Integer> root,
-         double x, double y, double hGap) {
+         private void displayTree(BST.TreeNode<String> root,
+                                  double x, double y, double hGap) {
          if (root.left != null) {
              // Draw a line to the left node
              getChildren().add(new Line(x - hGap, y + vGap, x, y));
