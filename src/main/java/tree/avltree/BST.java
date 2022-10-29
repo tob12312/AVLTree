@@ -31,8 +31,8 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
      */
     public BST(E[] objects) {
         this.c = (e1, e2) -> ((Comparable<E>) e1).compareTo(e2);
-        for (int i = 0; i < objects.length; i++) {
-            add(objects[i]);
+        for (E object : objects) {
+            add(object);
         }
     }
 
@@ -48,7 +48,7 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
         TreeNode<E> current = root;
         while (current != null) {
             if (c.compare(e, current.element) < 0)
-                current = current.left; // TODO : endret til left
+                current = current.left; // ENDRET FRA RIGHT TIL LEFT
             else if (c.compare(e, current.element) > 0)
                 current = current.right;
             else return true;
@@ -65,7 +65,7 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
     @Override
     public boolean leggInn(E e) {
         if (root == null)
-            root = createNewNode(e); // TODO: endret til metode for instansiering
+            root = createNewNode(e);
         else {
             TreeNode<E> parent = null;
             TreeNode<E> current = root;  // current overtar root
@@ -77,8 +77,8 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
                 else if (c.compare(e, current.element) > 0) {
                     parent = current;
                     current = current.right;
-                } else return false;
-            } // TODO: Lukket while-løkka her
+                } else return false; // duplikat
+            } // ENDRET: LUKKET WHILE HER
             if (c.compare(e, parent.element) < 0) {
                 parent.left = createNewNode(e);
             } else {
@@ -107,7 +107,7 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
     protected void inorder(TreeNode<E> root) {
         if (root == null) return;
         inorder(root.left);
-        System.out.println(root.element + " ");
+        System.out.print(root.element + " ");
         inorder(root.right);
     }
 
@@ -130,7 +130,7 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
         if (root == null) return;
         postOrder(root.left);
         postOrder(root.right);
-        System.out.println(root.element + " ");
+        System.out.print(root.element + " ");
     }
 
 
@@ -149,19 +149,20 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
      */
     protected void preOrder(TreeNode<E> root) {
         if (root == null) return;
-        System.out.println(root.element + " ");
+        System.out.print(root.element + " ");
         preOrder(root.left);
         preOrder(root.right);
     }
 
 
     /**
-     * Indre klasse for tre-node. Utvidet med høyde for bruk i AVLTree
-     * TODO: Legge inn ny variabel : KEY? INDEKS?
+     * Indre klasse for tre-node. Utvidet med høyde (og size) for bruk i AVLTree
+     *
      * @param <E>
      */
     public static class TreeNode<E> {
         protected int height = 0;
+        protected int size = 0; // antall barn/ noder i subtre av this
         protected E element;
         protected TreeNode<E> left;
         protected TreeNode<E> right;
@@ -172,7 +173,9 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
     }
 
 
+
     /**
+     * Metoden returnerer size
      *
      * @return
      */
@@ -181,8 +184,11 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
         return size;
     }
 
+
+
     /**
      * Returns the root of the tree
+     *
      * @return
      */
     public TreeNode<E> getRoot() {
@@ -209,7 +215,6 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
             } else
                 break;
         }
-
         return list; // Return an array list of nodes
     }
 
@@ -299,55 +304,65 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
                 new java.util.ArrayList<>();
         private int current = 0; // Point to the current element in list
 
-        /**
-         *
-         */
-        public InorderIterator() {
-            inorder(); // Traverse and store
-        }
 
-        /**
-         *
-         */
-        private void inorder() {
-            inorder(root);
-        }
 
-        /** Inorder traversal from a subtree */
-        private void inorder(TreeNode<E> root) {
-            if (root == null)return;
-            inorder(root.left);
-            list.add(root.element);
-            inorder(root.right);
-        }
 
-        /** More elements for traversing? */
-        @Override
-        public boolean hasNext() {
-            if (current < list.size())
-                return true;
-
-            return false;
-        }
-
-        /** Get the current element and move to the next */
-        @Override
-        public E next() {
-            return list.get(current++);
-        }
-
-        /** Remove the current element */
-        @Override
-        public void remove() {
-            if (current == 0) // next() has not been called yet
-                throw new IllegalStateException();
-
-            slett(list.get(--current));
-            list.clear(); // Clear the list
-            inorder(); // Rebuild the list
-        }
+    /**
+     *
+     */
+    public InorderIterator() {
+        inorder(); // Traverse and store
     }
 
+
+    /**
+     *
+     */
+    private void inorder() {
+        inorder(root);
+    }
+
+
+
+    /** Inorder traversal from a subtree */
+    private void inorder(TreeNode<E> root) {
+        if (root == null)return;
+        inorder(root.left);
+        list.add(root.element);
+        inorder(root.right);
+    }
+
+
+
+    /** More elements for traversing? */
+    @Override
+    public boolean hasNext() {
+        if (current < list.size())
+            return true;
+
+        return false;
+    }
+
+
+
+    /** Get the current element and move to the next */
+    @Override
+    public E next() {
+        return list.get(current++);
+    }
+
+
+
+    /** Remove the current element */
+    @Override
+    public void remove() {
+        if (current == 0) // next() has not been called yet
+            throw new IllegalStateException();
+        slett(list.get(--current));
+        list.clear(); // Clear the list
+        inorder(); // Rebuild the list
+    }
+}
 
 
 
@@ -359,7 +374,6 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
         root = null;
         size = 0;
     }
-
 
 
 

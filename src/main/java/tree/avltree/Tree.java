@@ -1,8 +1,9 @@
 package tree.avltree;
+
 import java.util.Collection;
+
 public interface Tree<E> extends Collection<E> {
     public boolean søk(E e);
-
 
     public boolean leggInn(E e);
 
