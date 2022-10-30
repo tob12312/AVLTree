@@ -27,7 +27,7 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
 
     /**
      *
-     * @param objects
+     * @param objects array av elementer for insert i BST
      */
     public BST(E[] objects) {
         this.c = (e1, e2) -> ((Comparable<E>) e1).compareTo(e2);
@@ -39,9 +39,10 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
 
 
     /**
-     * Metode for søk. Benyttes også av AVLTree
-     * @param e
-     * @return
+     * Metode for søk på element/ key
+     *
+     * @param e element/ key
+     * @return bekreftelse - true/ false
      */
     @Override
     public boolean søk(E e) {
@@ -57,10 +58,12 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
     }
 
 
+
     /**
-     * Metode for insert av node i tre.
-     * @param e
-     * @return
+     * Metode for insert av node/ element i tre.
+     *
+     * @param e element/ key
+     * @return bekreftelse - true/ false
      */
     @Override
     public boolean leggInn(E e) {
@@ -101,8 +104,9 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
 
 
     /**
+     * Metoden viser BST sortert inorder
      *
-     * @param root
+     * @param root node av class TreeNode
      */
     protected void inorder(TreeNode<E> root) {
         if (root == null) return;
@@ -114,6 +118,7 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
 
 
     /**
+     * Parameterløs drivermetode
      *
      */
     @Override
@@ -123,8 +128,9 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
 
 
     /**
+     * Metoden viser BST sortert postOrder
      *
-     * @param root
+     * @param root node av class TreeNode
      */
     protected void postOrder(TreeNode<E> root) {
         if (root == null) return;
@@ -135,6 +141,7 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
 
 
     /**
+     * Parameterløs drivermetode
      *
      */
     @Override
@@ -144,8 +151,9 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
 
 
     /**
+     * Metoden viser BST sortert preOrder
      *
-     * @param root
+     * @param root node av class TreeNode
      */
     protected void preOrder(TreeNode<E> root) {
         if (root == null) return;
@@ -177,7 +185,7 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
     /**
      * Metoden returnerer size
      *
-     * @return
+     * @return size
      */
     @Override
     public int getSize() {
@@ -189,7 +197,7 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
     /**
      * Returns the root of the tree
      *
-     * @return
+     * @return TreeNode
      */
     public TreeNode<E> getRoot() {
         return root;
@@ -219,12 +227,15 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
     }
 
 
-
-
+    /**
+     * Metoden sletter forekomster i BST.
+     * Returnerer true hvis vellykket.
+     * Returnerer false hvis ikke funnet.
+     *
+     * @param e element/ key
+     * @return vellykket/ ikke funnet
+     */
     @Override
-    /** Delete an element from the binary tree.
-     Return true if the element is deleted successfully
-     Return false if the element is not in the tree */
     public boolean slett(E e) {
         TreeNode<E> parent = null;
         TreeNode<E> current = root;
@@ -282,8 +293,9 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
 
 
     /**
+     * Metoden implementerer egen iterator ved override.
      *
-     * @return
+     * @return instans av egen iterator
      */
     @Override
     public java.util.Iterator<E> iterator() {
@@ -300,7 +312,7 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
     // Inner class InorderIterator
     private class InorderIterator implements java.util.Iterator<E> {
         // Store the elements in a list
-        private java.util.ArrayList<E> list =
+        private final java.util.ArrayList<E> list =
                 new java.util.ArrayList<>();
         private int current = 0; // Point to the current element in list
 
@@ -337,10 +349,7 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
     /** More elements for traversing? */
     @Override
     public boolean hasNext() {
-        if (current < list.size())
-            return true;
-
-        return false;
+        return current < list.size();
     }
 
 
@@ -379,11 +388,12 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
 
     /**
      * Metode for å returnerer TreeNode instans
-     * @param e
-     * @return
+     *
+     * @param e elementverdi/ key til node
+     * @return ny instans av TreeNode
      */
     protected TreeNode<E> createNewNode(E e){
-        return new TreeNode<E>(e);
+        return new TreeNode<>(e);
     }
 
 } // slutt class BST

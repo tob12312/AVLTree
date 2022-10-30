@@ -12,7 +12,7 @@ package tree.avltree;
 public class AVLTree<E extends Comparable<E>> extends BST<E> {
 
     /**
-     * Default konstruktør, kall på super
+     * Default konstruktør, indirekte kall på super
      */
     public AVLTree() {
     }
@@ -20,23 +20,21 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
 
     /**
      * Konstruktør med spesifisert komparator
-     * @param c
+     * @param c spesifisert komparator
      */
     public AVLTree(java.util.Comparator<E> c) {
         super(c);
     }
 
     /**
-     * Konstruktør instansierer BST. Nodes initielle høyde = 0
-     * @param objects
+     * Konstruktør for array av elementer
+     *
+     * @param objects array m elementer for lagring i AVLTree
      */
     public AVLTree(E[] objects) {
         super(objects);
     }
-    //  @Override /** Override createNewNode to create an AVLTreeNode */
-    //   protected TreeNode<E> createNewNode(E e) {
-    //        return new TreeNode<E>(e);
-    //     }
+
 
 
     @Override
@@ -77,13 +75,13 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
     /**
      * Drivermetode for enklere kall
      * Oppgave 26.5 - usikker på om det er dette boka legger opp til, men tror det.
-     * I Oblig skal man redigere metoder insert(leggInn) og delete(slett) for å oppdatere size,
+     * I 26.5 skal man redigere metoder insert(leggInn) og delete(slett) for å oppdatere size,
      * men rebalansering må vel potensielt utføres først(?). Vi mener det er en god løsning og heller
      * redigere metode updatateHeight, da denne kjører til rett tid og med rett logikk.
-     * Vi har valgt å oppdatere size ved å endre metode updateHeight til updateHeightAndSize.
+     * Metoden updateHeigtAndSize kunne ligget i class TreeNode, og kunne vært implementert som to separate metoder.
      *
-     * @param k
-     * @return
+     * @param k nodes relative order in Tree
+     * @return kall på metode med komplett parameterliste
      */
     public E find(int k) {
         if (k < 1 || k > this.size) {
@@ -97,9 +95,9 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
      * Metoden finner the kTh smallest element(value)
      * Egen drivermetode med færre parameter
      *
-     * @param k
-     * @param root
-     * @return
+     * @param k nodes order
+     * @param root root of tree
+     * @return kTh smallest element
      */
     private E find(int k, TreeNode<E> root) {
         if (root.left == null && k == 1)
@@ -120,7 +118,7 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
 
     /**
      * Metode for å balansere nodene fra e til root
-     * @param e
+     * @param e element in TreeNode
      */
     private void balancePath(E e) {
         java.util.ArrayList<TreeNode<E>> path = path(e);
@@ -150,8 +148,9 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
 
     /**
      * Metode for å beregne balansefaktor
-     * @param node
-     * @return
+     *
+     * @param node node av class TreeNode
+     * @return balansefaktor
      */
     private int balanceFactor(TreeNode<E> node) {
         if (node.right == null) // node has no right subtree
@@ -167,8 +166,8 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
 
     /**
      * Metode for LL rotasjon, både node A og B er venstre-tunge
-     * @param A
-     * @param parentOfA
+     * @param A node av class TreeNode
+     * @param parentOfA node av class TreeNode
      */
     private void balanceLL(TreeNode<E> A, TreeNode<E> parentOfA) {
         TreeNode<E> B = A.left; // A is left-heavy and B is left−heavy
@@ -193,8 +192,8 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
 
     /**
      * Metode for LR rotasjon, A er venstre-tung, B er høyde-tung
-     * @param A
-     * @param parentOfA
+     * @param A node av class TreeNode
+     * @param parentOfA node av class TreeNode
      */
     private void balanceLR(TreeNode<E> A, TreeNode<E> parentOfA) {
         TreeNode<E> B = A.left; // A is left−heavy
@@ -223,8 +222,8 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
 
     /**
      * Metode for RR rotasjon, både node A og B er høyre-tunge
-     * @param A
-     * @param parentOfA
+     * @param A node av class TreeNode
+     * @param parentOfA node av class TreeNode
      */
     private void balanceRR(TreeNode<E> A, TreeNode<E> parentOfA) {
         TreeNode<E> B = A.right; // A is right-heavy and B is right-heavy
@@ -249,8 +248,8 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
 
     /**
     * Metode for RL rotasjon, A er høyre-tung, B er venstre-tung
-    * @param A
-    * @param parentOfA
+    * @param A node av class TreeNode
+    * @param parentOfA node av class TreeNode
     */
     private void balanceRL(TreeNode<E> A, TreeNode<E> parentOfA) {
         TreeNode<E> B = A.right; // A is right-heavy
@@ -312,9 +311,11 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
 
     /**
      * Hjelpemetode for slett der current IKKE HAR har ventre-barn
-     * @param element
-     * @param current
-     * @param parent
+     * Case 1: current has no left children
+     *
+     * @param element nodes value
+     * @param current node av class TreeNode
+     * @param parent node av class TreeNode
      */
     private void slettCase1(E element, TreeNode<E> current, TreeNode<E> parent) {
         if (current.left == null) {
@@ -339,8 +340,10 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
 
     /**
      * Hjelpemetode for slett der current HAR et ventre-barn
+     * Case 2: The current node has a left child
+     * Special case: parentOfRightMost is current
      *
-     * @param current
+     * @param current node av class TreeNode
      */
     private void slettCase2(TreeNode<E> current) {
         TreeNode<E> parentOfRightMost = current;
@@ -360,18 +363,6 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
         // Balance the tree if necessary
         balancePath(parentOfRightMost.element);
     }
-
-
-
-    //       /** AVLTreeNode is TreeNode plus height */
-    //         protected static class AVLTreeNode<E> extends BST.TreeNode<E> {
-    //protected int height = 0; // New data field
-
-    //        public AVLTreeNode(E e) {
-    //        super(e);
-
-    //        }
-    //}
 
  } // slutt AVLTree
 

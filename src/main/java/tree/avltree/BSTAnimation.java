@@ -11,9 +11,20 @@ import javafx.stage.Stage;
 import java.util.Random;
 
 /**
- * Class BSTAnimation inneholder kontrollere for AVLTree/ BTView
- * Tegner et enkelt kontrollpanel og kjører applikasjonen fra Start()
- * Hver datatype som skal insertes benytter egne referanser og metoder
+ *
+ *
+ * Innlevering obligatorisk oppgave 2, Algoritmer og datastrukturer, USN Bø.
+ *
+ * Videreutvikling/ adapsjon av kode fra Introduction to Java Programming and Data Structures
+ * Forfatter: Y.Daniel Liang.
+ *
+ * Videreutviklet av: Tore Broberg og Leonard Rygh, Oktober 2022.
+ *
+ *
+ * Class BSTAnimation - applikasjonsklasse:
+ * Inneholder kontrollere for AVLTree/ BTView.
+ * Tegner et enkelt kontrollpanel og kjører applikasjonen fra Start().
+ * Hver datatype som skal insertes i AVLTree<T> benytter egne referanser og metoder.
  *
  */
 public class BSTAnimation extends Application {
@@ -22,8 +33,8 @@ public class BSTAnimation extends Application {
     private Boolean typeInt;
     private AVLTree<Integer> intTre;
     private AVLTree<String> stringTre;
-    private BTView view;
-    private BTView view2;
+    private BTView<Integer> intView;
+    private BTView<String> stringView;
     private TextField tfKey;
     private Button btInsert, btDelete, btSearch, btFind, btTest;
     private RadioButton tb1, tb2;
@@ -33,7 +44,7 @@ public class BSTAnimation extends Application {
     /**
      * Start
      *
-     * @param primaryStage
+     * @param primaryStage scene
      */
     @Override // Override the start method in the Application class
     public void start(Stage primaryStage) {
@@ -56,12 +67,12 @@ public class BSTAnimation extends Application {
         typeInt = true; // int som default = true
 
         // Referanser til AVLTree for hver type
-        intTre = new AVLTree<Integer>(); // Create a AVLTree for Integer
-        stringTre = new AVLTree<String>(); // Create a AVLTree for String
+        intTre = new AVLTree<>(); // Create a AVLTree for Integer
+        stringTre = new AVLTree<>(); // Create a AVLTree for String
 
-        // Referanser til BTView for hver type
-        view = new BTView(intTre); // Create a View for Integer
-        view2 = new BTView(stringTre); // Create a View for String
+        // Referanser til BTintView for hver type
+        intView = new BTView<>(intTre); // Create a intView for Integer
+        stringView = new BTView<>(stringTre); // Create a intView for String
     }
 
 
@@ -72,7 +83,7 @@ public class BSTAnimation extends Application {
      */
     private void kontrollpanel() {
         pane = new BorderPane(); // rotpanel
-        pane.setCenter(view); // integer-view = default
+        pane.setCenter(intView); // integer-intView = default
         tfKey = new TextField();
         tfKey.setPrefColumnCount(3);
         tfKey.setAlignment(Pos.BASELINE_RIGHT);
@@ -121,19 +132,18 @@ public class BSTAnimation extends Application {
             if (typeInt && erInteger()) deleteInteger();
             else if (erString()) deleteString();
         });
-        // TODO : nye metoder
         btFind.setOnAction(e -> { // find kThe smallest element/ value
-            if (typeInt && erInteger()) findInteger(); // let i Int-tre
-            else if (!typeInt && erInteger()) findString(); // let i String-tre
-            else { // bruker har tastet ikke-integer
-                view2.displayTree();
-                view2.setStatus("Illegal Key, Integers only");
+            if (typeInt && erInteger()) findInteger(); // find in Int-tre
+            else if (!typeInt && erInteger()) findString(); // find in String-tre
+            else { // non-integer input
+                stringView.displayTree();
+                stringView.setStatus("Illegal Key, Integers only");
             }
         });
         btTest.setOnAction(e -> { // test
             if (typeInt) testInteger(); // test +=10 random Integer
             else testString(); // test +=10 random String
-            testAVLTree(); // test mønster, skriver til konsoll
+            testAVLTree(); // test pattern in console
         });
     }
 
@@ -144,21 +154,35 @@ public class BSTAnimation extends Application {
     /**
      * Eventhåndtering kontrollpanel Toggle
      * Metodekall avgjøres av datatype (Integer/ String)
+     * Toggle fungerer som select og reset
      *
      */
     private void toggleEvents() {
         tb1.setOnAction(e -> { // Ved toggling til Integer :
             byttTreType(); // hjelpemetode tømmer trær og tekstfelt
-            view.displayTree(); // vis tømt panel
             typeInt = true; // skal nå håndtere int
-            pane.setCenter(view); // viser instans tilpasset int
+            pane.setCenter(intView); // viser instans tilpasset int
         });
         tb2.setOnAction(e -> { // tilsvarende for String :
             byttTreType();
-            view2.displayTree();
             typeInt = false;
-            pane.setCenter(view2);
+            pane.setCenter(stringView);
         });
+    }
+
+
+
+
+
+    /**
+     * Hjelpemetode for å slette innhold i trær og tekstfelt
+     */
+    private void byttTreType() {
+        intTre.clear(); // tøm tre
+        stringTre.clear();
+        intView.getChildren().clear(); // tøm panel
+        stringView.getChildren().clear();
+        tfKey.clear(); // tøm tekstfelt
     }
 
 
@@ -172,8 +196,8 @@ public class BSTAnimation extends Application {
         try {
             Integer.parseInt(tfKey.getText());
         } catch (NumberFormatException e) {
-            view.displayTree();
-            view.setStatus("Illegal Key, Integers only");
+            intView.displayTree();
+            intView.setStatus("Illegal Key, Integers only");
             tfKey.clear();
             return false;
         }
@@ -185,17 +209,18 @@ public class BSTAnimation extends Application {
 
 
     /**
-     * Insert av integer-verdier
+     * Insert av integer-verdier.
+     * Duplikater ikke tillatt.
      */
     private void insertInteger() {
         int key = Integer.parseInt(tfKey.getText());
         if (intTre.søk(key)) {
-            view.displayTree();
-            view.setStatus(key + " is already in the tree, new insert failed");
+            intView.displayTree();
+            intView.setStatus(key + " is already in the tree, new insert failed");
         } else {
             intTre.leggInn(key); // Insert a new key
-            view.displayTree();
-            view.setStatus(key + " is inserted in the tree");
+            intView.displayTree(key);
+            intView.setStatus(key + " is inserted in the tree");
         }
     }
 
@@ -204,16 +229,16 @@ public class BSTAnimation extends Application {
 
 
     /**
-     * Metode for å søke etter Integer-verdier
+     * Metode for å søke etter Integer-verdier.
      */
     private void searchInteger() {
         int key = Integer.parseInt(tfKey.getText());
         if (intTre.søk(key)) { // key is in the tree OK
-            view.displayTree();
-            view.setStatus(key + " is in the tree");
+            intView.displayTree(key);
+            intView.setStatus(key + " is in the tree");
         } else {
-            view.displayTree();
-            view.setStatus(key + " is not found");
+            intView.displayTree(key);
+            intView.setStatus(key + " is not found");
         }
     }
 
@@ -228,11 +253,11 @@ public class BSTAnimation extends Application {
     private void findInteger() {
         int key = Integer.parseInt(tfKey.getText());
         if (intTre.find(key) != null) {
-            view.displayTree();
-            view.setStatus("the " + key + "th smallest value is " + intTre.find(key));
+            intView.displayTree(intTre.find(key));
+            intView.setStatus("the " + key + "th smallest value is " + intTre.find(key));
         } else {
-            view.displayTree();
-            view.setStatus(key + " is outside of range : max = number of nodes");
+            intView.displayTree();
+            intView.setStatus(key + " is outside of range : max = number of nodes");
         }
     }
 
@@ -247,12 +272,12 @@ public class BSTAnimation extends Application {
     private void deleteInteger() {
         int key = Integer.parseInt(tfKey.getText());
         if (!intTre.søk(key)) {
-            view.displayTree();
-            view.setStatus(key + " is not found");
+            intView.displayTree();
+            intView.setStatus(key + " is not found");
         } else {
             intTre.slett(key); // Delete a key
-            view.displayTree();
-            view.setStatus(key + " is deleted from the tree");
+            intView.displayTree();
+            intView.setStatus(key + " is deleted from the tree");
         }
     }
 
@@ -265,13 +290,13 @@ public class BSTAnimation extends Application {
      * Metoden kontrollerer for lovlig String
      * Tall og tom streng ikke lovlig, kan justeres i isNumericOrEmpty()
      *
-     * @return
+     * @return true hvis lovlig verdi
      */
     private boolean erString() {
         String key = tfKey.getText();
         if (erTallellerTom(key)) { // Tall og tom streng ikke lovlig
-            view2.displayTree();
-            view2.setStatus("Illegal Key, Strings only");
+            stringView.displayTree();
+            stringView.setStatus("Illegal Key, Strings only");
             tfKey.clear();
             return false;
         }
@@ -284,17 +309,18 @@ public class BSTAnimation extends Application {
     
 
     /**
-    * Metode for insert når String verdier
+    * Metode for insert av String verdier
+     * Duplikater ikke tillatt
     */
     private void insertString() {
         String key = tfKey.getText();
         if (stringTre.søk(key)) {
-            view2.displayTree();
-            view2.setStatus(key + " is already in the tree, new insert failed");
+            stringView.displayTree();
+            stringView.setStatus(key + " is already in the tree, new insert failed");
         } else {
             stringTre.leggInn(key); // Insert a new key
-            view2.displayTree();
-            view2.setStatus(key + " is inserted in the tree");
+            stringView.displayTree(key);
+            stringView.setStatus(key + " is inserted in the tree");
         }
     }
 
@@ -309,11 +335,11 @@ public class BSTAnimation extends Application {
     private void searchString() {
         String key = tfKey.getText();
         if (stringTre.søk(key)) {
-            view2.displayTree();
-            view2.setStatus(key + " is in the tree");
+            stringView.displayTree(key);
+            stringView.setStatus(key + " is in the tree");
         } else {
-            view2.displayTree();
-            view2.setStatus(key + " is not found");
+            stringView.displayTree(key);
+            stringView.setStatus(key + " is not found");
         }
     }
 
@@ -327,11 +353,11 @@ public class BSTAnimation extends Application {
     private void findString() {
         int key = Integer.parseInt(tfKey.getText());
         if (stringTre.find(key) != null) {
-            view2.displayTree();
-            view2.setStatus("the " + key + "th smallest value is " + stringTre.find(key));
+            stringView.displayTree(stringTre.find(key));
+            stringView.setStatus("the " + key + "th smallest value is " + stringTre.find(key));
         } else {
-            view2.displayTree();
-            view2.setStatus(key + " is outside of range : max = number of nodes");
+            stringView.displayTree();
+            stringView.setStatus(key + " is outside of range : max = number of nodes");
         }
     }
 
@@ -345,12 +371,12 @@ public class BSTAnimation extends Application {
     private void deleteString() {
         String key = tfKey.getText();
         if (!stringTre.søk(key)) {
-            view2.displayTree();
-            view2.setStatus(key + " is not in the tree");
+            stringView.displayTree();
+            stringView.setStatus(key + " is not in the tree");
         } else {
             stringTre.slett(key); // Delete a key
-            view2.displayTree();
-            view2.setStatus(key + " is deleted from the tree");
+            stringView.displayTree();
+            stringView.setStatus(key + " is deleted from the tree");
         }
     }
 
@@ -360,16 +386,17 @@ public class BSTAnimation extends Application {
 
 
     /**
-     * Metode for å teste Integer-tre. Setter inn 10 random Integers
+     * Metode for å teste Integer-tre. Setter inn 10 random Integers.
+     * Setter inn tall fra 0 til 99. OBS! duplikater ikke tillatt.
+     * Øk bounds for testing av flere nivåer.
+     *
      */
     private void testInteger() {
         for (int i=0; i<10; i++) {
             int key = new Random().nextInt(100);
-            // TODO: søke først for duplikater : om man vil ha tilbakemelding til bruker
-            // TODO: kan vi utelate søk fra insert ?
             intTre.leggInn(key); // Insert a new key
-            view.displayTree();
-            view.setStatus("Test Integer executed");
+            intView.displayTree();
+            intView.setStatus("Test Integer executed");
         }
     }
 
@@ -378,14 +405,17 @@ public class BSTAnimation extends Application {
     
 
     /**
-     * Metode for å teste Integer-tre. Setter inn 10 random Strings
+     * Metode for å teste String-tre. Setter inn 10 Strings
+     * bestående av tilfeldige permutasjoner av de fem første små bokstavene.
+     * OBS! duplikater ikke tillatt.
+     * Øk antall lovlige tegn for testing av flere nivåer.
      */
     private void testString() {
         for (int i=0; i<10; i++) {
             String key = lagRandomString();
             stringTre.leggInn(key); // Insert a new key
-            view2.displayTree();
-            view2.setStatus("Test String executed");
+            stringView.displayTree();
+            stringView.setStatus("Test String executed");
         }
     }
 
@@ -395,9 +425,9 @@ public class BSTAnimation extends Application {
 
 
     /**
-     * Hjelpemetoden returnerer toggleGroup i HBox
+     * Hjelpemetoden for kontrollpanel
      *
-     * @return
+     * @return toggleGroup i Hbox
      */
     private HBox toggleDatatype() {
         ToggleGroup gruppe = new ToggleGroup();
@@ -414,35 +444,22 @@ public class BSTAnimation extends Application {
 
 
 
-
-    /**
-     * Hjelpemetode for å slette innhold i trær og tekstfelt
-     */
-    private void byttTreType() {
-        intTre.clear(); // tøm tre
-        stringTre.clear();
-        tfKey.clear(); // tøm tekstfelt
-    }
-
-    
-    
     
 
     /**
-     * Hjelpemetode for å generere random permutasjoner av tre tilfeldige små bokstaver.
+     * Hjelpemetode for å generere random permutasjoner av 5 små bokstaver.
      *
      * @return String-verdi for insert i AVLTree<String>
      */
     private String lagRandomString() {
         int fra = 97; // fra liten a
-        int til = 122; // til liten z - dropper æ, ø, å
+        int til = 101; // tilOgMed liten e
         int antallTegn = 3;
         Random random = new Random();
-        String testStreng = random.ints(fra, til + 1)
+        return random.ints(fra, til + 1)
                 .limit(antallTegn) // innfører grense på antall tegn, Stringbuilder får ascii
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString();
-        return testStreng;
     }
 
 
@@ -460,7 +477,7 @@ public class BSTAnimation extends Application {
         if (verdi == null || verdi.equals(""))
             return true;
         try {
-            double d = Double.parseDouble(verdi);
+            Double.parseDouble(verdi);
         } catch (NumberFormatException e) {
             return false;
         }
