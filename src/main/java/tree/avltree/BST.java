@@ -2,30 +2,40 @@ package tree.avltree;
 
 
 /**
- * Class BST inneholder logikk for beregning av binærtre
- * Indre klasse TreeNode ivaretar verdi, pekere og noders høyde i treet
- * Indre klasse InorderIterator implementerer Iterator, intern iterator
+ * Class BST inneholder logikk for beregning av binærtre.
+ * Indre klasse TreeNode ivaretar verdi, pekere, height og size.
+ * Indre klasse InorderIterator implementerer Iterator, intern iterator.
  *
  * @param <E>
  */
 public class BST <E extends Comparable<E>> implements Tree<E> {
-
     protected TreeNode<E> root;
     protected int size = 0;
     protected java.util.Comparator<E> c;
 
+
+
     /**
-     * Konstruktør for ??
+     * Default konstruktør
      */
     public BST() {
         this.c = (e1, e2) -> ((Comparable<E>) e1).compareTo(e2);
     }
 
+
+
+    /**
+     * Konstruktør som tar inn spesifisert comparator
+     */
     public BST(java.util.Comparator<E> c) {
         this.c = c;
     }
 
+
+
+
     /**
+     * Konstruktør tar inn array av elementer
      *
      * @param objects array av elementer for insert i BST
      */
@@ -312,7 +322,7 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
     // Inner class InorderIterator
     private class InorderIterator implements java.util.Iterator<E> {
         // Store the elements in a list
-        private final java.util.ArrayList<E> list =
+        private final java.util.ArrayList<E> LIST =
                 new java.util.ArrayList<>();
         private int current = 0; // Point to the current element in list
 
@@ -340,7 +350,7 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
     private void inorder(TreeNode<E> root) {
         if (root == null)return;
         inorder(root.left);
-        list.add(root.element);
+        LIST.add(root.element);
         inorder(root.right);
     }
 
@@ -349,7 +359,7 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
     /** More elements for traversing? */
     @Override
     public boolean hasNext() {
-        return current < list.size();
+        return current < LIST.size();
     }
 
 
@@ -357,7 +367,7 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
     /** Get the current element and move to the next */
     @Override
     public E next() {
-        return list.get(current++);
+        return LIST.get(current++);
     }
 
 
@@ -367,8 +377,8 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
     public void remove() {
         if (current == 0) // next() has not been called yet
             throw new IllegalStateException();
-        slett(list.get(--current));
-        list.clear(); // Clear the list
+        slett(LIST.get(--current));
+        LIST.clear(); // Clear the list
         inorder(); // Rebuild the list
     }
 }
