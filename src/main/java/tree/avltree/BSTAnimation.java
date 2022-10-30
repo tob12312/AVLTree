@@ -62,14 +62,22 @@ public class BSTAnimation extends Application {
 
     /**
      * Metode for å initiere variabler/ referanser
+     * AVLTree benytter comparator for organisering.
+     * For java.util.Comparator.naturalOrder() kan AVLTree initieres uten parameter.
+     *
      */
     private void initVars() {
         typeInt = true; // int som default = true
 
-        // Referanser til AVLTree for hver type
+        // Referanser til AVLTree for hver type, parameterløst kall gir java.util.Comparator
         intTre = new AVLTree<>(); // Create a AVLTree for Integer
         stringTre = new AVLTree<>(); // Create a AVLTree for String
 
+        // Test av alternativ init med comparator som parameter - for egne datatyper/ klasser
+        /*
+        intTre = new AVLTree<Integer>(Comparator.naturalOrder()); // Create a AVLTree for Integer
+        stringTre = new AVLTree<String>(Comparator.naturalOrder()); // Create a AVLTree for String
+         */
         // Referanser til BTintView for hver type
         intView = new BTView<>(intTre); // Create a intView for Integer
         stringView = new BTView<>(stringTre); // Create a intView for String
@@ -254,7 +262,7 @@ public class BSTAnimation extends Application {
         int key = Integer.parseInt(tfKey.getText());
         if (intTre.find(key) != null) {
             intView.displayTree(intTre.find(key));
-            intView.setStatus("the " + key + "th smallest value is " + intTre.find(key));
+            intView.setStatus("the " + key + "th smallest Key is " + intTre.find(key));
         } else {
             intView.displayTree();
             intView.setStatus(key + " is outside of range : max = number of nodes");
@@ -353,8 +361,9 @@ public class BSTAnimation extends Application {
     private void findString() {
         int key = Integer.parseInt(tfKey.getText());
         if (stringTre.find(key) != null) {
-            stringView.displayTree(stringTre.find(key));
-            stringView.setStatus("the " + key + "th smallest value is " + stringTre.find(key));
+            String response = stringTre.find(key);
+            stringView.displayTree(response);
+            stringView.setStatus("The " + key + "th smallest value is " + response);
         } else {
             stringView.displayTree();
             stringView.setStatus(key + " is outside of range : max = number of nodes");
@@ -447,7 +456,8 @@ public class BSTAnimation extends Application {
     
 
     /**
-     * Hjelpemetode for å generere random permutasjoner av 5 små bokstaver.
+     * Hjelpemetode for å generere randomiserte permutasjoner av 3 bokstaver
+     * Begrenset til a, b, c, d, e
      *
      * @return String-verdi for insert i AVLTree<String>
      */
@@ -467,13 +477,14 @@ public class BSTAnimation extends Application {
 
 
     /**
-     * Hjelpemtode for å avgjøre om en verdi er numerisk eller ikke
+     * Hjelpemtode for å begrense input av String-verdier
      * Tillater ikke numeriske verdier i AVLTree for String, heller ikke tom streng/ null
+     * Kan utelates/ justeres
      *
      * @param verdi for test
      * @return true = String
      */
-    private static boolean erTallellerTom(String verdi) {
+    private boolean erTallellerTom(String verdi) {
         if (verdi == null || verdi.equals(""))
             return true;
         try {

@@ -16,7 +16,7 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
 
 
     /**
-     * Default konstruktør
+     * Default konstruktør med egen comparator
      */
     public BST() {
         this.c = (e1, e2) -> ((Comparable<E>) e1).compareTo(e2);

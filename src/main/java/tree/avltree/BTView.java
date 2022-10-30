@@ -13,8 +13,8 @@ import javafx.scene.text.Text;
  */
 public class BTView<T extends Comparable<T>> extends Pane {
     private final AVLTree<T> TREE; // referanse til AVLTree
-    private final double RADIUS = 15; // Tree node radius
-    private final double VGAP = 50; //
+    private final double RADIUS = 15; // TreeNode radius
+    private final double VGAP = 50; //  vertikal spacing mellom noder
 
 
 
@@ -102,12 +102,12 @@ public class BTView<T extends Comparable<T>> extends Pane {
             displayTree(root.right, keyElement, x + hGap, y + VGAP, hGap / 2);
         }
 
-        // Display a node, keyElement highlighted in green
+        // Display a node, keyElement highlighted i grønt, plassering med .length()
         Circle circle = new Circle(x, y, RADIUS);
         circle.setFill(root.element.equals(keyElement) ? Color.LIMEGREEN : Color.WHITE);
         circle.setStroke(Color.BLACK);
         getChildren().addAll(circle,
-            new Text(x - 4, y + 4, root.element + ""));
+            new Text(x - 3 * root.element.toString().length() , y + 4, root.element + ""));
     }
 
 } // slutt class BTView
