@@ -37,8 +37,9 @@ public class AVLTree<E extends Comparable<E>> extends BST<E> {
 
 
 
-    @Override
+
     /** Insert an element and rebalance if necessary */
+    @Override
     public boolean leggInn(E e) {
         boolean successful = super.leggInn(e); // leggInn i BST utført
         if (!successful)

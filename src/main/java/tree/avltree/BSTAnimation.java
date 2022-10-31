@@ -1,7 +1,6 @@
 package tree.avltree;
 
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -15,7 +14,7 @@ import java.util.Random;
  *
  * Innlevering obligatorisk oppgave 2, Algoritmer og datastrukturer, USN Bø.
  *
- * Videreutvikling/ adapsjon av kode fra Introduction to Java Programming and Data Structures
+ * Videreutvikling av klasser fra Introduction to Java Programming and Data Structures
  * Forfatter: Y.Daniel Liang.
  *
  * Videreutviklet av: Tore Broberg og Leonard Rygh, Oktober 2022.
@@ -24,7 +23,7 @@ import java.util.Random;
  * Class BSTAnimation - applikasjonsklasse:
  * Inneholder kontrollere for AVLTree/ BTView.
  * Tegner et enkelt kontrollpanel og kjører applikasjonen fra Start().
- * Hver datatype som skal insertes i AVLTree<T> benytter egne referanser og metoder.
+ * Elementer som skal insertes i AVLTree<T> benytter typebestemte referanser og metoder.
  *
  */
 public class BSTAnimation extends Application {
@@ -70,17 +69,17 @@ public class BSTAnimation extends Application {
         typeInt = true; // int som default = true
 
         // Referanser til AVLTree for hver type, parameterløst kall gir java.util.Comparator
-        intTre = new AVLTree<>(); // Create a AVLTree for Integer
-        stringTre = new AVLTree<>(); // Create a AVLTree for String
+        intTre = new AVLTree<>(); // AVLTree for Integer
+        stringTre = new AVLTree<>(); // AVLTree for String
 
         // Test av alternativ init med comparator som parameter - for egne datatyper/ klasser
         /*
-        intTre = new AVLTree<Integer>(Comparator.naturalOrder()); // Create a AVLTree for Integer
-        stringTre = new AVLTree<String>(Comparator.naturalOrder()); // Create a AVLTree for String
+        intTre = new AVLTree<Integer>(Comparator.naturalOrder()); // AVLTree for Integer
+        stringTre = new AVLTree<String>(Comparator.naturalOrder()); // AVLTree for String
          */
         // Referanser til BTintView for hver type
-        intView = new BTView<>(intTre); // Create a intView for Integer
-        stringView = new BTView<>(stringTre); // Create a intView for String
+        intView = new BTView<>(intTre); // view for Integer
+        stringView = new BTView<>(stringTre); // view for String
     }
 
 
@@ -167,12 +166,12 @@ public class BSTAnimation extends Application {
      */
     private void toggleEvents() {
         tb1.setOnAction(e -> { // Ved toggling til Integer :
-            byttTreType(); // hjelpemetode tømmer trær og tekstfelt
+            reset(); // hjelpemetode tømmer trær og tekstfelt
             typeInt = true; // skal nå håndtere int
             pane.setCenter(intView); // viser instans tilpasset int
         });
         tb2.setOnAction(e -> { // tilsvarende for String :
-            byttTreType();
+            reset();
             typeInt = false;
             pane.setCenter(stringView);
         });
@@ -185,7 +184,7 @@ public class BSTAnimation extends Application {
     /**
      * Hjelpemetode for å slette innhold i trær og tekstfelt
      */
-    private void byttTreType() {
+    private void reset() {
         intTre.clear(); // tøm tre
         stringTre.clear();
         intView.getChildren().clear(); // tøm panel
@@ -255,14 +254,15 @@ public class BSTAnimation extends Application {
 
 
     /**
-     * Metode for å søke etter Integer-verdier
+     * Metode for å søke etter den K minste Integer-verdien
      *
      */
     private void findInteger() {
         int key = Integer.parseInt(tfKey.getText());
         if (intTre.find(key) != null) {
-            intView.displayTree(intTre.find(key));
-            intView.setStatus("the " + key + "th smallest Key is " + intTre.find(key));
+            int respons = intTre.find(key);
+            intView.displayTree(respons);
+            intView.setStatus("The " + key + "th smallest Key is " + respons);
         } else {
             intView.displayTree();
             intView.setStatus(key + " is outside of range : max = number of nodes");
@@ -283,7 +283,7 @@ public class BSTAnimation extends Application {
             intView.displayTree();
             intView.setStatus(key + " is not found");
         } else {
-            intTre.slett(key); // Delete a key
+            intTre.slett(key); // Key slettes
             intView.displayTree();
             intView.setStatus(key + " is deleted from the tree");
         }
@@ -314,6 +314,7 @@ public class BSTAnimation extends Application {
 
 
 
+
     
 
     /**
@@ -326,7 +327,7 @@ public class BSTAnimation extends Application {
             stringView.displayTree();
             stringView.setStatus(key + " is already in the tree, new insert failed");
         } else {
-            stringTre.leggInn(key); // Insert a new key
+            stringTre.leggInn(key); // Key settes inn
             stringView.displayTree(key);
             stringView.setStatus(key + " is inserted in the tree");
         }
@@ -355,7 +356,7 @@ public class BSTAnimation extends Application {
 
 
     /**
-     * Metode for å søke etter Integer-verdier
+     * Metode for å søke etter den K'te minste String-verdien
      *
      */
     private void findString() {
@@ -383,7 +384,7 @@ public class BSTAnimation extends Application {
             stringView.displayTree();
             stringView.setStatus(key + " is not in the tree");
         } else {
-            stringTre.slett(key); // Delete a key
+            stringTre.slett(key); // Key slettes
             stringView.displayTree();
             stringView.setStatus(key + " is deleted from the tree");
         }
@@ -403,7 +404,7 @@ public class BSTAnimation extends Application {
     private void testInteger() {
         for (int i=0; i<10; i++) {
             int key = new Random().nextInt(100);
-            intTre.leggInn(key); // Insert a new key
+            intTre.leggInn(key); // Keys legges inn
             intView.displayTree();
             intView.setStatus("Test Integer executed");
         }
@@ -422,7 +423,7 @@ public class BSTAnimation extends Application {
     private void testString() {
         for (int i=0; i<10; i++) {
             String key = lagRandomString();
-            stringTre.leggInn(key); // Insert a new key
+            stringTre.leggInn(key); // Keys legges inn
             stringView.displayTree();
             stringView.setStatus("Test String executed");
         }
@@ -444,7 +445,6 @@ public class BSTAnimation extends Application {
         tb2.setToggleGroup(gruppe);
         gruppe.selectToggle(typeInt ? tb1 : tb2);
         HBox ramme = new HBox(5);
-        ramme.setPadding(new Insets(8, 0, 8, 0));
         ramme.getChildren().addAll(tb1, tb2);
         ramme.setAlignment(Pos.CENTER);
         return ramme;
@@ -456,14 +456,14 @@ public class BSTAnimation extends Application {
     
 
     /**
-     * Hjelpemetode for å generere randomiserte permutasjoner av 3 bokstaver
+     * Hjelpemetode for å generere randomiserte strenger bestående av små bokstaver
      * Begrenset til a, b, c, d, e
      *
      * @return String-verdi for insert i AVLTree<String>
      */
     private String lagRandomString() {
-        int fra = 97; // fra liten a
-        int til = 101; // tilOgMed liten e
+        int fra = 97; // fra aaa
+        int til = 101; // tilOgMed eee
         int antallTegn = 3;
         Random random = new Random();
         return random.ints(fra, til + 1)
@@ -500,31 +500,31 @@ public class BSTAnimation extends Application {
 
 
     /**
-    * Metode for å teste at AVLTree fungerer som tiltenkt
+    * Metode for å teste at AVLTree fungerer som tiltenkt, benytter egen instans av ALVTree
     */
     private void testAVLTree() {
-        AVLTree<Integer> tree2 = new AVLTree<>(new Integer[] {25, 20, 5});
+        AVLTree<Integer> tree = new AVLTree<>(new Integer[] {25, 20, 5});
         System.out.print("After inseting 25, 20, 5:");
-        printTree(tree2);
-        tree2.leggInn(34);
-        tree2.leggInn(50);
+        printTree(tree);
+        tree.leggInn(34);
+        tree.leggInn(50);
         System.out.print("\nAfter inserting 34, 50:");
-        printTree(tree2);
-        tree2.leggInn(30);
+        printTree(tree);
+        tree.leggInn(30);
         System.out.print("\nAfter inserting 30:");
-        printTree(tree2);
-        tree2.leggInn(10);
+        printTree(tree);
+        tree.leggInn(10);
         System.out.print("\nAfter inserting 10:");
-        printTree(tree2);
-        tree2.slett(30);
-        tree2.slett(34);
-        tree2.slett(50);
+        printTree(tree);
+        tree.slett(30);
+        tree.slett(34);
+        tree.slett(50);
         System.out.print("\nAfter removing 34, 30, 50:");
-        printTree(tree2);
-        tree2.slett(5);
+        printTree(tree);
+        tree.slett(5);
         System.out.print("\nAfter removing 5:");
         System.out.print("\nTraverse the elements in the tree: ");
-        for (int e: tree2) {
+        for (int e: tree) {
             System.out.print(e + " ");
         }
     }

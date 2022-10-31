@@ -3,61 +3,59 @@ package tree.avltree;
 import java.util.Collection;
 
 public interface Tree<E> extends Collection<E> {
-    public boolean søk(E e);
+    boolean søk(E e);
 
-    public boolean leggInn(E e);
+    boolean leggInn(E e);
 
-    public boolean slett(E e);
+    boolean slett(E e);
 
-    public int getSize();
+    int getSize();
 
-    public default void inorder(){}
+    default void inorder(){}
 
-    public default void postOrder(){}
+    default void postOrder(){}
 
-    public default void preOrder(){}
+    default void preOrder(){}
     @Override
-    public default boolean isEmpty(){
+    default boolean isEmpty(){
         return size() ==0;
     }
     @Override
-    public default boolean contains(Object e){
-        return søk((E)e);
-    }
+    default boolean contains(Object e){return søk((E)e);}
     @Override
-    public default boolean add(E e){
+    default boolean add(E e){
         return leggInn(e);
     }
     @Override
-    public default boolean remove(Object e){
+    default boolean remove(Object e){
         return slett((E)e);
     }
     @Override
-    public default int size(){
+    default int size(){
         return getSize();
     }
     @Override
-    public default boolean containsAll(Collection<?> c){
+    default boolean containsAll(Collection<?> c){
         return false;
     }
     @Override
-    public default boolean addAll(Collection<? extends E> c){
+    default boolean addAll(Collection<? extends E> c){
         return false;
     }
     @Override
-    public default boolean removeAll(Collection<?> c){
+    default boolean removeAll(Collection<?> c){
         return false;
     }
     @Override
-    public default boolean retainAll(Collection<?> c){
+    default boolean retainAll(Collection<?> c){
         return false;
     }
     @Override
-    public default Object[] toArray(){
+    default Object[] toArray(){
         return null;
     }
     @Override
-    public default <T> T[] toArray(T[] array){
+    default <T> T[] toArray(T[] array){
         return null;
     }
 
