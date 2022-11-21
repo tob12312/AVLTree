@@ -42,7 +42,7 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
     public BST(E[] objects) {
         this.c = (e1, e2) -> ((Comparable<E>) e1).compareTo(e2);
         for (E object : objects) {
-            add(object);
+            add(object); // OBS: add overrides av leggInn()
         }
     }
 
@@ -107,8 +107,9 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
      *
      */
     @Override
-    public void inorder() {
-        inorder(root);
+    public void inorder() { // root.element == 20
+        inorder(root); // alltid node på dybde 0 (øverst)
+        System.out.println("ALLE KALL ER FERDIG");
     }
 
 
@@ -119,9 +120,15 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
      * @param root node av class TreeNode
      */
     protected void inorder(TreeNode<E> root) {
-        if (root == null) return;
-        inorder(root.left);
-        System.out.print(root.element + " ");
+
+        if (root == null) {
+            System.out.println("RETURN");
+            return;
+        }
+        System.out.println("Root element INN: " + root.element);
+
+        inorder(root.left); // hvor mange runder før print? - hele metoden kjører hver gang, rekursive kall legges i stakken
+        System.out.println("Root element UT: "+root.element + " "); // 5
         inorder(root.right);
     }
 
@@ -330,7 +337,7 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
 
 
     /**
-     *
+     * Tilhører class InorderIterator
      */
     public InorderIterator() {
         inorder(); // Traverse and store
@@ -338,7 +345,7 @@ public class BST <E extends Comparable<E>> implements Tree<E> {
 
 
     /**
-     *
+     * Tilhører class InorderIterator
      */
     private void inorder() {
         inorder(root);

@@ -7,7 +7,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import java.util.Random;
+
+import java.util.*;
 
 /**
  *
@@ -54,7 +55,306 @@ public class BSTAnimation extends Application {
         primaryStage.setTitle("BSTAnimation"); // Set the stage title
         primaryStage.setScene(new Scene(pane, 1200, 600)); // Place the scene in the stage
         primaryStage.show(); // Display the stage
+
+        // TODO: test av addAll - OK
+        Integer[] aA = {1, 2, 3, 4, 5};
+        Integer[] bB = {3, 4};
+        intTre.addAll(List.of(aA));
+
+        // TODO: test av retainAll - OK
+    //    intTre.retainAll(List.of(bB));
+
+        // TODO: test av containsAll - OK
+        System.out.println("Test containsAll før remove: " + intTre.containsAll(List.of(aA)));
+
+        // TODO: test av removeAll - OK
+    //    intTre.removeAll(List.of(aA));
+        System.out.println("Test containsAll ETTER remove: " + intTre.containsAll(List.of(aA)));
+
+
+        // TODO: testing:
+        /** test av compareTo */
+        int test = 0;
+        Integer gammel = 1;
+        Integer ny = 2;
+        if (ny.compareTo(gammel) > 0) test = ny;
+        System.out.println("Test av compareTo: " + test);
+
+
+        /** test av Comparator på String */
+        String[] tabell = {"ddd", "cccc", "aa", "b"};
+        java.util.ArrayList<String> t1 = new ArrayList<String>(List.of(tabell));
+
+        for (String t: t1) {
+            System.out.println("T1 usortert: "+t);
+        }
+
+
+        t1.sort(java.util.Comparator.naturalOrder());
+        for (String t: t1) {
+            System.out.println("T1 natural order: "+t);
+        }
+        Collections.shuffle(t1);
+
+        t1.sort(null);
+        for (String t: t1) {
+            System.out.println("T1 natural order NULL: "+t);
+        }
+        Collections.shuffle(t1);
+
+        t1.sort(java.util.Comparator.reverseOrder());
+        for (String t: t1) {
+            System.out.println("T1 reversert natural order!: "+t);
+        }
+        Collections.shuffle(t1);
+
+        t1.sort(java.util.Comparator.comparing(String::length));
+        for (String t: t1) {
+            System.out.println("T1 sortert på lengde: "+t);
+        }
+        Collections.shuffle(t1);
+
+        t1.sort(java.util.Comparator.comparing(String::length).reversed());
+        for (String t: t1) {
+            System.out.println("T1 sortert på lengde, reversert: "+t);
+        }
+        Collections.shuffle(t1);
+
+
+        /** test av Comparator på Integer */
+        Integer[] tall = {2, 3, 1, 7, 4, 9, 6, 5};
+        java.util.ArrayList<Integer> t2 = new ArrayList<Integer>(List.of(tall));
+
+
+        for (int t: t2) {
+            System.out.println("T2 usortert: "+t);
+        }
+        Collections.shuffle(t2); // omrokkerer
+
+        for (int t: t2) {
+            System.out.println("T2 omrokkert: "+t);
+        }
+        Collections.shuffle(t2); // omrokkerer
+
+        t2.sort(java.util.Comparator.naturalOrder());
+        for (int t: t2) {
+            System.out.println("T2 i natural order: "+t);
+        }
+        Collections.shuffle(t2); // omrokkerer
+
+        t2.sort(java.util.Comparator.comparing(Integer::intValue));
+        for (int t: t2) {
+            System.out.println("T2 i Integer.intValue: "+t);
+        }
+        Collections.shuffle(t2); // omrokkerer
+
+        t2.sort(java.util.Comparator.comparing(Integer::byteValue));
+        for (int t: t2) {
+            System.out.println("T2 i byteValue: "+t);
+        }
+        Collections.shuffle(t2); // omrokkerer
+
+        t2.forEach(e-> System.out.println("test av forEach: "+e));
+
+   //     test(tabell);
+        // TODO: test av swap
+        Object[] swapTab = {"any", 2, 3, 4, 5, 6, 7, 8.99};
+        System.out.println("SwapArray før swap 2: " + Arrays.toString(swapTab));
+        System.out.println("SwapArray etter swap 2: "+ Arrays.toString(swap(swapTab, 0, 7)));
+
+        List<Object> testL = new ArrayList<>();
+        testL.add("Morra di");
+        testL.add(2);
+        testL.add(3);
+        testL.add(4);
+        testL.add(5);
+        testL.add(6);
+        testL.add(7);
+        testL.add(8);
+        System.out.println("SwapListe før swap: " + testL);
+     //   Collections.swap(testL, 0, 7);
+        System.out.println("SwapListe etter swap: "+ swap(testL, 0, 7));
+
+        // todo: test av insertionSort:
+
+        int[] t4 = {6, 2, 3, 4, 5, 66, 7, 1};
+        InsertionSort.insertionSort(t4);
+        for (Integer heltall : t4)
+            System.out.println("Test av insertionSort: "+ heltall);
+
+        int[] t5 = {6, 2, 3, 4, 5, 66, 7, 1};
+        BubbleSort.bubbleSort(t5);
+        for (Integer heltall : t5)
+            System.out.println("Test av bubbleSort: "+ heltall);
+
+        int[] t6 = {6, 2, 3, 4, 5, 66, 7, 1};
+        MergeSort.mergeSort(t6);
+        for (Integer heltall : t6)
+            System.out.println("Test av mergeSort: "+ heltall);
+
+        int[] t7 = {6, 2, 3, 4, 5, 66, 7, 1};
+        QuickSort.quickSort(t7);
+        for (Integer heltall : t7)
+            System.out.println("Test av quickSort: "+ heltall);
+
+        ArrayList<Integer> t8 = new ArrayList<>();
+        t8.add(1);
+        t8.add(2);
+        t8.add(3);
+
+        for (Integer i : t8) System.out.println("test iterator: " + i);
+
+        t8.forEach(e-> System.out.println("nå med lambda: "+e));
+
+        // TODO: read data from file
+
+        try {
+            ReadData.readData();
+        } catch (Exception e) {
+            System.out.println("FEIL MED READDATA: " + e.getMessage());
+        }
+
+
+        // TODO: 2-dimensjonal array = rad først, så kolonne
+        int[][] testDobbelArray = new int[10][10];
+
+        // TODO: test av selectionSort:
+
+        Integer[] tT = {2, 3, 1, 7, 4, 9, 6, 5};
+        selectionSort(tT);
+        System.out.println("TEST AV SELECTIONSORT:: " + Arrays.toString(tT));
+
+        Integer[] iS = {2, 3, 1, 7, 4, 9, 6, 5};
+        insertionSort(iS);
+        System.out.println("TEST AV INSERTIONSORT:: " + Arrays.toString(iS));
+
+
+        // TEST AV QUICKSORT
+        Integer[] qS = {2, 3, 1, 7, 4, 9, 6, 5};
+        // TODO: de tre comparatorene under er likeverdige for Integer (men første er universell??)
+        quickSort(qS, (a, b) -> a-b);
+        //quickSort(qS, Comparator.comparingInt(a -> a));  // kompilator vil heller ha denne
+        //quickSort(qS, Comparator.naturalOrder()); // denne forstår Integer
+        System.out.println("TEST AV QUICKSORT:: " + Arrays.toString(qS));
+
+        // TEST SWAP2
+        Integer[] s2 = {2, 3, 1, 7, 4, 9, 6, 5};
+        System.out.println("TEST AV swap2 før sort:: " + Arrays.toString(s2));
+        swap2(s2, 0, 5);
+        System.out.println("TEST AV swap2 etter sort:: " + Arrays.toString(s2));
+
+        perm("abc");
     }
+
+    // DRIVERMETODE FOR PERMUTASJONER
+    public void perm(String s) {
+        perm(s.toCharArray(), 0);
+    }
+
+    // REKURSIV METODE FOR PERMUTASJONER
+    public void perm(char[] s, int pos) {
+        if (pos == s.length - 1) // hvis ferdig, skriv ut
+            System.out.println("Kontroll av perm 1: " + Arrays.toString(s));
+        for (int i = pos; i<s.length; i++) {
+            bytt(s, i, pos); // bytt indeks 0
+            perm(s, pos +1); // rekursivt kall, jobb mot slutt av tabel
+            bytt(s, pos, i); // ny i 0
+
+        }
+    }
+
+    // VARIANT AV SWAP FOR CHAR[]
+    public void bytt(char[] t, int e1, int e2) {
+        char tmp = t[e1];
+        t[e1] = t[e2];
+        t[e2] = tmp;
+    }
+
+    // DRIVERRUTINE FOR QUICKSORT
+    public static <T> void quickSort(T[] a, Comparator<T> c) {
+        quickSort(a, 0, a.length, c);
+    }
+
+
+    // Function to find the middle of three number
+    public static int middleOfThree(int a, int b, int c) {
+        // Checking for b
+        if ((a < b && b < c) || (c < b && b < a))
+            return b;
+
+            // Checking for a
+        else if ((b < a && a < c) || (c < a && a < b))
+            return a;
+
+        else
+            return c;
+    }
+
+
+    // QUICKSORT
+    public static <T> void quickSort(T[] a, int start, int end, Comparator<T> c) {
+        if (end-start <= 0) return; // bace case
+        int i = start; // start på tabell, typisk 0
+        int j = end-1; // pivotelementet VAR her siste element. TODO: finn median-av-tre
+    //    int mid = (i+slutt) /2; // finner midterste verdi
+    //    int j = middleOfThree(i, mid, slutt);
+
+        boolean movingI = true;
+        while (i<j) { // om flere indekser i tabell
+            if (c.compare(a[i], a[j]) >= 0) { // bytt også like!
+                swap2(a, i, j); // bytt innhold i indekserte
+                movingI = !movingI; // bytt retning
+            }
+            if (movingI) i++; else j--;  // les ny indeks
+        } // ferdig med splitt, utfør rekursive kall
+        quickSort(a, start, i, c); // sorterer de små
+        quickSort(a, i+1, end, c); // sorterer de store
+    }
+
+    public static<T extends Comparable<? super T>> void selectionSort(T[] a) {
+        for (int i = 0; i<a.length; i++) {
+            int minPos = i;
+            for (int j = i+1; j<a.length; j++) {
+                if (a[j].compareTo(a[minPos]) < 0) {
+                    minPos = j;
+                }
+                swap2(a, i, minPos);
+            }
+        }
+    }
+
+    public static<T extends Comparable<? super T>> void insertionSort(T[] a) {
+        for (int j = 1; j<a.length; j++) {
+            T key = a[j];
+            int i = j-1;
+            while ( (i > -1) && ( a[i].compareTo(key) > 0) ) {
+                a[i+1] = a[i];
+                i--;
+            }
+            a[i+1] = key;
+        }
+    }
+
+    private static <T> void swap2(T[] tab, int e1, int e2) {
+        T tmp = tab[e1]; // huske objekt i tmp var
+        tab[e1] = tab[e2]; // reassign objekt fra
+        tab[e2] = tmp; // reassign objekt til
+    }
+
+    private static Object[] swap(Object[] tab, int e1, int e2) {
+        Object tmp = tab[e1]; // huske objekt i tmp var
+        tab[e1] = tab[e2]; // reassign objekt fra
+        tab[e2] = tmp; // reassign objekt til
+        return tab;
+    }
+
+    private static List<Object> swap(List<Object> liste, int e1, int e2) {
+        List<Object> l = liste;
+        l.set(e1, l.set(e2, l.get(e1)));
+        return l;
+    }
+
+
 
 
 
@@ -503,7 +803,7 @@ public class BSTAnimation extends Application {
     * Metode for å teste at AVLTree fungerer som tiltenkt, benytter egen instans av ALVTree
     */
     private void testAVLTree() {
-        AVLTree<Integer> tree = new AVLTree<>(new Integer[] {25, 20, 5});
+        AVLTree<Integer> tree = new AVLTree<>(new Integer[] {25, 20, 5, 30, 40, 60});
         System.out.print("After inseting 25, 20, 5:");
         printTree(tree);
         tree.leggInn(34);
@@ -544,6 +844,12 @@ public class BSTAnimation extends Application {
         tree2.preOrder();
         System.out.print("\nThe number of nodes is " + tree2.getSize());
         System.out.println();
+    }
+
+    private static void test(String[] tabell) {
+      java.util.Arrays.sort(tabell, Comparator.comparing(String::length));
+      for (String s: tabell)
+        System.out.println("Sortert tabell: " + s);
     }
 
 }
